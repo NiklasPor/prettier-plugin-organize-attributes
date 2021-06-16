@@ -1,6 +1,6 @@
 ### prettier-plugin-organize-attributes
 
-# Organize your HTML attributes autmatically with Prettier 🧼
+## Organize your HTML attributes autmatically with Prettier 🧼
 
 ```
 npm i prettier-plugin-organize-attributes -D
