@@ -1,5 +1,5 @@
 <template>
-    <div c="c" a b></div>
+  <div other="other" class="class" v-on="whatever" v-bind="bound" id="id"></div>
 </template>
 
 <script>

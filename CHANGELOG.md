@@ -6,7 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Support for parsing Angular + Vue
+- Support for organizing Angular & Vue attributes
+
+### Changed
+
+- Plugin automatically selects presets for languages
 
 ## 0.0.1
 

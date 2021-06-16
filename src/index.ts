@@ -2,7 +2,7 @@ import * as posthtml from "posthtml";
 import { FastPath, Parser, ParserOptions } from "prettier";
 import { parsers as htmlParsers } from "prettier/parser-html";
 import { miniorganize, OrganizeOptions, OrganizeOptionsSort } from "./organize";
-import { presets } from "./presets";
+import { PRESETS, PRESET_KEYS } from "./presets";
 
 export const parsers = {
   html: wrapParser(htmlParsers.html),
@@ -23,7 +23,8 @@ export const options: {
   attributeSort: {
     type: "string",
     category: "Global",
-    description: "Sort HTML attribute grousp internally. ASC, DESC or NONE.",
+    description:
+      "attributeSort HTML attribute grousp internally. ASC, DESC or NONE.",
   },
 };
 
@@ -44,32 +45,54 @@ function wrapParser(parser: Parser<any>): Parser<any> {
 
 function transformPostParse(parse: Parser<any>["parse"]): Parser<any>["parse"] {
   return (text, parsers, options) =>
-    transformNode(
+    transformRootNode(
       parse(text, parsers, options),
       options as ParserOptions & PrettierPluginOrganizeAttributesParserOptions
     );
 }
 
-function transformNode(
+function transformRootNode(
   node: HTMLNode,
   options: ParserOptions & PrettierPluginOrganizeAttributesParserOptions
-): HTMLNode {
+) {
   const sort: OrganizeOptionsSort =
     options.attributeSort === "NONE" ? false : options.attributeSort;
-  const groups = options.attributeGroups;
+  const groups = [...options.attributeGroups];
 
+  if (groups.length === 0) {
+    switch (options.parser.toString().toLowerCase()) {
+      case "angular":
+        groups.push(PRESET_KEYS.$ANGULAR);
+        break;
+      case "vue":
+        groups.push(PRESET_KEYS.$VUE);
+        break;
+      case "html":
+      default:
+        groups.push(PRESET_KEYS.$HTML);
+    }
+  }
+
+  transformNode(node, groups, sort);
+  return node;
+}
+
+function transformNode(
+  node: HTMLNode,
+  groups: string[],
+  sort: OrganizeOptionsSort
+): void {
   if (node.attrs) {
     node.attrs = miniorganize(node.attrs, {
       ignoreCase: true,
-      presets,
+      presets: PRESETS,
       groups,
       sort,
       map: ({ name }) => name,
     }).flat;
   }
 
-  node.children?.forEach((child) => transformNode(child, options));
-  return node;
+  node.children?.forEach((child) => transformNode(child, groups, sort));
 }
 
 export type PrettierPluginOrganizeAttributesParserOptions = {

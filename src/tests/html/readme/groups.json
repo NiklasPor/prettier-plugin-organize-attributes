@@ -1,1 +1,0 @@
-{  "groups": ["^class$", "^(id|name)$", "$DEFAULT", "^aria-"]}

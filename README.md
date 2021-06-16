@@ -3,15 +3,17 @@
 ## Organize your HTML attributes autmatically with Prettier 🧼
 
 ```
-npm i prettier-plugin-organize-attributes -D
+npm i prettier prettier-plugin-organize-attributes -D
 ```
 
+- Supports Angular, Vue & HTML with **0** configuration
 - Groups are matched from top to bottom.
-- Attributes which are not matched are put into `$DEFAULT`.
-- If `$DEFAULT` is not specified they are appended at the end.
-- Order inside groups remains the same if `attributeSort` is **not** used.
+- Attributes are matched against RegExps or presets.
+  - A list of additional presets can be found [here](src/presets.ts).
+  - Attributes which are not matched are put into `$DEFAULT`.
+  - If `$DEFAULT` is not specified they are appended at the end.
 - Attributes in each group can be ordered `ASC` and `DESC` by specifing `attributeSort`.
-- A list of additional presets can be found [here](src/presets.ts).
+  - Order inside groups remains the same if `attributeSort` is **not** used.
 
 ---
 
@@ -19,11 +21,21 @@ npm i prettier-plugin-organize-attributes -D
   - [Groups](#groups)
   - [Sort](#sort)
 - [Presets](#presets)
+  - [HTML](#html)
   - [Angular](#angular)
+  - [Vue](#vue)
   - [Angular Custom](#angular-custom)
   - [Code-Guide by @mdo](#code-guide-by-mdo)
 
 ## Usage
+
+The following files also work out of the box **without** any configuration needed:
+
+- `.html` – [HTML Example](#html)
+- `.component.html` – [Angular Example](#angular)
+- `.vue` – [Vue Example](#vue)
+
+Read below for writing custom attribute orders and configurations ⤵️
 
 ### Groups
 
@@ -48,11 +60,11 @@ npm i prettier-plugin-organize-attributes -D
 ```html
 <!-- output -->
 <div
-  aria-disabled="true"
+  class="myclass"
   name="myname"
   id="myid"
-  class="myclass"
   src="other"
+  aria-disabled="true"
 ></div>
 ```
 
@@ -80,17 +92,32 @@ npm i prettier-plugin-organize-attributes -D
 
 ## Presets
 
+### HTML
+
+```json
+// .prettierrc
+{}
+```
+
+```html
+<!-- input.html -->
+<div id="id" other="other" class="style"></div>
+```
+
+```html
+<!-- output.html -->
+<div class="style" id="id" other="other"></div>
+```
+
 ### Angular
 
 ```json
 // .prettierrc
-{
-  "attributeGroups": ["$ANGULAR"]
-}
+{}
 ```
 
 ```html
-<!-- input -->
+<!-- input.component.html -->
 <div
   (output)="output()"
   [input]="input"
@@ -103,7 +130,7 @@ npm i prettier-plugin-organize-attributes -D
 ```
 
 ```html
-<!-- output -->
+<!-- output.component.html -->
 <div
   class="style"
   id="id"
@@ -155,6 +182,29 @@ npm i prettier-plugin-organize-attributes -D
   id="id"
   other="other"
 ></div>
+```
+
+---
+
+### Vue
+
+```json
+// .prettierrc
+{}
+```
+
+```vue
+<!-- input.vue -->
+<template>
+  <div other="other" class="class" v-on="whatever" v-bind="bound" id="id"></div>
+</template>
+```
+
+```vue
+<!-- output.vue -->
+<template>
+  <div class="class" id="id" v-on="whatever" v-bind="bound" other="other"></div>
+</template>
 ```
 
 ---

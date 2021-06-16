@@ -23,15 +23,14 @@ languages.forEach((language) => {
 
           const input = readFileSync(inputPath).toString();
           const expected = readFileSync(expectedPath).toString();
-          const { groups, sort } = JSON.parse(
-            readFileSync(join(path, "groups.json")).toString()
+          const testConfig = JSON.parse(
+            readFileSync(join(path, "config.json")).toString()
           );
 
           const options: Partial<PrettierPluginOrganizeAttributesParserOptions> &
             prettier.Options = {
             filepath: inputPath,
-            attributeGroups: groups,
-            attributeSort: sort,
+            ...testConfig,
             plugins: [OrganizeAttributes],
           };
           const prettify = (code: string) => prettier.format(code, options);

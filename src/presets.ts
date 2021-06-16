@@ -21,9 +21,12 @@ const PRESET = {
   $ANGULAR_TWO_WAY_BINDING: /^\[\(/,
   $ANGULAR_INPUT: /^\[(?!\()/,
   $ANGULAR_OUTPUT: /^\(/,
+
+  // Vue
+  $VUE_ATTRIBUTE: /^v-/,
 };
 
-const PRESET_GROUPS: Presets = {
+const PRESET_GROUPS = {
   /**
    * Angular
    *
@@ -57,9 +60,19 @@ const PRESET_GROUPS: Presets = {
     PRESET.$ROLE,
     PRESET.$ARIA,
   ],
+  $HTML: [PRESET.$CLASS, PRESET.$ID],
+  $VUE: [PRESET.$CLASS, PRESET.$ID, PRESET.$VUE_ATTRIBUTE],
 };
 
-export const presets: Presets = {
+const presets = {
   ...PRESET,
   ...PRESET_GROUPS,
+};
+
+const presetKeys: Record<string, string> = {};
+Object.keys(presets).forEach((key) => (presetKeys[key] = key));
+
+export const PRESETS: Presets = presets;
+export const PRESET_KEYS = presetKeys as {
+  [K in keyof typeof presets]: K;
 };
