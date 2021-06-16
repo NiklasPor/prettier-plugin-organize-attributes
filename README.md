@@ -1,4 +1,7 @@
-### prettier-plugin-organize-attributes
+<div style="display: flex; align-items: center">
+<h3 style="margin-right: 1rem">prettier-plugin-organize-attributes</h3>
+<img alt="npm" src="https://img.shields.io/npm/v/prettier-plugin-organize-attributes">
+</div>
 
 ## Organize your HTML attributes autmatically with Prettier 🧼
 
