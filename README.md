@@ -92,7 +92,7 @@ npm i prettier-plugin-organize-attributes -D
 ```html
 <!-- input -->
 <div
-  (output)="output"
+  (output)="output()"
   [input]="input"
   *ngIf="ngIf"
   other="other"
@@ -110,7 +110,7 @@ npm i prettier-plugin-organize-attributes -D
   *ngIf="ngIf"
   [(ngModel)]="binding"
   [input]="input"
-  (output)="output"
+  (output)="output()"
   other="other"
 ></div>
 ```
@@ -135,7 +135,7 @@ npm i prettier-plugin-organize-attributes -D
 <!-- input -->
 <div
   [input]="input"
-  (output)="output"
+  (output)="output()"
   *ngIf="ngIf"
   other="other"
   class="style"
@@ -147,7 +147,7 @@ npm i prettier-plugin-organize-attributes -D
 ```html
 <!-- output -->
 <div
-  (output)="output"
+  (output)="output()"
   [(ngModel)]="binding"
   [input]="input"
   *ngIf="ngIf"

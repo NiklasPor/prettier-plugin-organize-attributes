@@ -5,35 +5,48 @@ import * as OrganizeAttributes from "./index";
 import { PrettierPluginOrganizeAttributesParserOptions } from "./index";
 
 const testFolder = join(__dirname, "tests");
-const tests = readdirSync(testFolder);
+const languages = readdirSync(testFolder);
 
-tests.forEach((test) =>
-  it(test, () => {
-    const path = join(testFolder, test);
-    const input = readFileSync(join(path, "input.html")).toString();
-    const expected = readFileSync(join(path, "expected.html")).toString();
-    const { groups, sort } = JSON.parse(
-      readFileSync(join(path, "groups.json")).toString()
-    );
+languages.forEach((language) => {
+  describe(language, () => {
+    const languagePath = join(testFolder, language);
+    const tests = readdirSync(languagePath);
+    const extension = readFileSync(join(languagePath, "extension")).toString();
 
-    const options: Partial<PrettierPluginOrganizeAttributesParserOptions> &
-      prettier.Options = {
-      parser: "html",
-      attributeGroups: groups,
-      attributeSort: sort,
-      plugins: [OrganizeAttributes],
-    };
-    const prettify = (code: string) => prettier.format(code, options);
+    tests
+      .filter((file) => file !== "extension")
+      .forEach((test) =>
+        it(test, () => {
+          const path = join(testFolder, language, test);
+          const inputPath = join(path, `input.${extension}`);
+          const expectedPath = join(path, `expected.${extension}`);
 
-    const format = () => prettify(input);
+          const input = readFileSync(inputPath).toString();
+          const expected = readFileSync(expectedPath).toString();
+          const { groups, sort } = JSON.parse(
+            readFileSync(join(path, "groups.json")).toString()
+          );
 
-    const expectedError = expected.match(/Error\("(?<message>.*)"\)/)?.groups
-      ?.message;
+          const options: Partial<PrettierPluginOrganizeAttributesParserOptions> &
+            prettier.Options = {
+            filepath: inputPath,
+            attributeGroups: groups,
+            attributeSort: sort,
+            plugins: [OrganizeAttributes],
+          };
+          const prettify = (code: string) => prettier.format(code, options);
 
-    if (expectedError) {
-      expect(format).toThrow(expectedError);
-    } else {
-      expect(format()).toEqual(expected);
-    }
-  })
-);
+          const format = () => prettify(input);
+
+          const expectedError = expected.match(/Error\("(?<message>.*)"\)/)
+            ?.groups?.message;
+
+          if (expectedError) {
+            expect(format).toThrow(expectedError);
+          } else {
+            expect(format()).toEqual(expected);
+          }
+        })
+      );
+  });
+});

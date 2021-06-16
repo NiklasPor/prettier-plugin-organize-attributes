@@ -4,17 +4,10 @@ import { parsers as htmlParsers } from "prettier/parser-html";
 import { miniorganize, OrganizeOptions, OrganizeOptionsSort } from "./organize";
 import { presets } from "./presets";
 
-const htmlParser = htmlParsers.html;
-
 export const parsers = {
-  html: <Parser>{
-    ...htmlParser,
-    parse: (text, parsers, options) =>
-      transformNode(
-        htmlParser.parse(text, parsers, options),
-        options as ParserOptions & PrettierPluginOrganizeAttributesParserOptions
-      ),
-  },
+  html: wrapParser(htmlParsers.html),
+  vue: wrapParser(htmlParsers.vue),
+  angular: wrapParser(htmlParsers.angular),
 };
 
 export const options: {
@@ -40,6 +33,21 @@ interface HTMLNode {
   attrs?: { name: string; value: any }[];
   value?: string;
   type: string;
+}
+
+function wrapParser(parser: Parser<any>): Parser<any> {
+  return {
+    ...parser,
+    parse: transformPostParse(parser.parse),
+  };
+}
+
+function transformPostParse(parse: Parser<any>["parse"]): Parser<any>["parse"] {
+  return (text, parsers, options) =>
+    transformNode(
+      parse(text, parsers, options),
+      options as ParserOptions & PrettierPluginOrganizeAttributesParserOptions
+    );
 }
 
 function transformNode(
