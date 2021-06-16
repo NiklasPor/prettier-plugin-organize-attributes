@@ -3,15 +3,6 @@ import { join } from "path";
 import * as prettier from "prettier";
 import * as OrganizeAttributes from "./index";
 import { PrettierPluginOrganizeAttributesParserOptions } from "./index";
-import { OrganizeAttributesOptions } from "./posthtml-organize-attributes";
-
-const options: PrettierPluginOrganizeAttributesParserOptions &
-  prettier.Options = {
-  parser: "html",
-  htmlAttributeGroups: ["^a", "^b"],
-  plugins: [OrganizeAttributes],
-};
-const prettify = (code: string) => prettier.format(code, options);
 
 const testFolder = join(__dirname, "tests");
 const tests = readdirSync(testFolder);
@@ -21,10 +12,18 @@ tests.forEach((test) =>
     const path = join(testFolder, test);
     const input = readFileSync(join(path, "input.html")).toString();
     const expected = readFileSync(join(path, "expected.html")).toString();
+    const { groups, sort } = JSON.parse(
+      readFileSync(join(path, "groups.json")).toString()
+    );
 
-    if (test.startsWith("invalid")) {
-      jest.spyOn(console, "error").mockImplementationOnce(() => {});
-    }
+    const options: Partial<PrettierPluginOrganizeAttributesParserOptions> &
+      prettier.Options = {
+      parser: "html",
+      attributeGroups: groups,
+      attributeSort: sort,
+      plugins: [OrganizeAttributes],
+    };
+    const prettify = (code: string) => prettier.format(code, options);
 
     const format = () => prettify(input);
 

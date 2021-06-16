@@ -1,11 +1,11 @@
 {
   "name": "prettier-plugin-organize-attributes",
-  "version": "0.0.1",
-  "description": "Fixes prettier formatting for go templates.",
+  "version": "0.0.1-beta.1",
+  "description": "Organize your HTML attributes autmatically with Prettier 🧼",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NiklasPor/prettier-plugin-go-template"
+    "url": "https://github.com/NiklasPor/prettier-plugin-organize-attributes"
   },
   "author": {
     "name": "Niklas Portmann",
@@ -28,16 +28,13 @@
     "build": "tsc --pretty",
     "watch": "npm run build -- --watch",
     "watch:test": "jest --watch",
-    "release:plugin": "npm run build && npm publish",
-    "release:plugin:beta": "npm run build && npm publish --tag beta",
-    "release": "npm run release:coverage && npm run release:plugin"
+    "release:plugin": "npm run test && npm run build && npm publish",
+    "release:plugin:beta": "npm run test && npm run build && npm publish --tag beta"
   },
   "peerDependencies": {
     "prettier": "^2.0.0"
   },
-  "dependencies": {
-    "posthtml": "^0.16.4"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/jest": "^26.0.15",
     "@types/node": "^14.14.2",

@@ -1,67 +1,70 @@
-import { type } from "os";
 import * as posthtml from "posthtml";
-import { Parser, ParserOptions } from "prettier";
+import { FastPath, Parser, ParserOptions } from "prettier";
 import { parsers as htmlParsers } from "prettier/parser-html";
-import {
-  OrganizeAttributesOptions,
-  posthtmlOrganizeAttributes,
-} from "./posthtml-organize-attributes";
+import { miniorganize, OrganizeOptions, OrganizeOptionsSort } from "./organize";
+import { presets } from "./presets";
 
 const htmlParser = htmlParsers.html;
 
 export const parsers = {
   html: <Parser>{
     ...htmlParser,
-    preprocess: htmlParser.preprocess
-      ? (text, options) =>
-          organizeAttributesPreproccess(
-            htmlParser.preprocess!(text, options),
-            options as ParserOptions &
-              PrettierPluginOrganizeAttributesParserOptions
-          )
-      : organizeAttributesPreproccess,
+    parse: (text, parsers, options) =>
+      transformNode(
+        htmlParser.parse(text, parsers, options),
+        options as ParserOptions & PrettierPluginOrganizeAttributesParserOptions
+      ),
   },
 };
 
 export const options: {
   [K in keyof PrettierPluginOrganizeAttributesParserOptions]: any;
 } = {
-  htmlAttributeGroups: {
+  attributeGroups: {
     type: "string",
     category: "Global",
     array: true,
-    description: "Provide an order to sort HTML attributes.",
+    description: "Provide an order to organize HTML attributes into groups.",
+    default: [{ value: [] }],
+  },
+  attributeSort: {
+    type: "string",
+    category: "Global",
+    description: "Sort HTML attribute grousp internally. ASC, DESC or NONE.",
   },
 };
 
-export type PrettierPluginOrganizeAttributesParserOptions = {
-  htmlAttributeGroups: string[];
-};
-
-function organizeAttributesPreproccess(
-  text: string,
-  options: ParserOptions & PrettierPluginOrganizeAttributesParserOptions
-): string {
-  let isLastNodeComment = false;
-
-  const result = posthtml([
-    posthtmlOrganizeAttributes({
-      groups: options.htmlAttributeGroups,
-      shouldSkip: (node) => {
-        if (isLastNodeComment && typeof node === "string") {
-          return false;
-        }
-
-        let result = isLastNodeComment;
-        isLastNodeComment =
-          typeof node === "string" && node.includes("prettier-ignore");
-
-        return result;
-      },
-    }),
-  ]).process(text, {
-    sync: true,
-  }) as unknown as posthtml.Result<unknown>;
-
-  return result.html;
+interface HTMLNode {
+  children?: HTMLNode[];
+  attrMap?: { [key: string]: any };
+  attrs?: { name: string; value: any }[];
+  value?: string;
+  type: string;
 }
+
+function transformNode(
+  node: HTMLNode,
+  options: ParserOptions & PrettierPluginOrganizeAttributesParserOptions
+): HTMLNode {
+  const sort: OrganizeOptionsSort =
+    options.attributeSort === "NONE" ? false : options.attributeSort;
+  const groups = options.attributeGroups;
+
+  if (node.attrs) {
+    node.attrs = miniorganize(node.attrs, {
+      ignoreCase: true,
+      presets,
+      groups,
+      sort,
+      map: ({ name }) => name,
+    }).flat;
+  }
+
+  node.children?.forEach((child) => transformNode(child, options));
+  return node;
+}
+
+export type PrettierPluginOrganizeAttributesParserOptions = {
+  attributeGroups: string[];
+  attributeSort: "ASC" | "DESC" | "NONE";
+};

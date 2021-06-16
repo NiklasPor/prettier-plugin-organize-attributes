@@ -1,12 +1,12 @@
-export const UNKNOWN_GROUP = "$UNKNOWN";
+export const DEFAULT_GROUP = "$DEFAULT";
 
 export type GroupQuery = string | RegExp;
 export type GroupKey<TPresets extends Presets> =
   | keyof TPresets
   | string
-  | typeof UNKNOWN_GROUP;
+  | typeof DEFAULT_GROUP;
 
-export type Presets = Record<string, GroupQuery[]>;
+export type Presets = Record<string, GroupQuery | GroupQuery[]>;
 
 export type OrganizedGroup<TValue> = { values: TValue[]; query: GroupQuery };
 export type OrganizedResult<TValue> = {
@@ -17,8 +17,11 @@ export type OrganizedResult<TValue> = {
 export interface BaseOrganizeOptions<TPresets extends Presets> {
   presets?: TPresets;
   groups: GroupKey<TPresets>[];
-  sort?: "ASC" | "DESC" | boolean;
+  sort?: OrganizeOptionsSort;
+  ignoreCase?: boolean;
 }
+
+export type OrganizeOptionsSort = "ASC" | "DESC" | boolean;
 export interface MapOrganizeOptions<TPresets extends Presets, TValue>
   extends BaseOrganizeOptions<TPresets> {
   map: (value: TValue) => string;
@@ -28,15 +31,15 @@ export type OrganizeOptions<TPresets extends Presets, TValue> =
   | BaseOrganizeOptions<TPresets>
   | MapOrganizeOptions<TPresets, TValue>;
 
-export function organize<TPresets extends Presets>(
+export function miniorganize<TPresets extends Presets>(
   values: string[],
   options: BaseOrganizeOptions<TPresets>
 ): OrganizedResult<string>;
-export function organize<TPresets extends Presets, TValue>(
+export function miniorganize<TPresets extends Presets, TValue>(
   values: TValue[],
   options: MapOrganizeOptions<TPresets, TValue>
 ): OrganizedResult<TValue>;
-export function organize<TValue>(
+export function miniorganize<TValue>(
   values: TValue[],
   options: OrganizeOptions<Presets, TValue>
 ): OrganizedResult<TValue> {
@@ -48,15 +51,15 @@ export function organize<TValue>(
     values: TValue[];
     query: GroupQuery;
   }[] => {
-    if (query === UNKNOWN_GROUP) {
-      return [getUnknownGroup()];
+    if (query === DEFAULT_GROUP) {
+      return [getDefaultGroup()];
     }
 
     const preset = typeof query === "string" && options.presets?.[query];
     if (!preset) {
       return [
         {
-          regexp: groupQueryToRegExp(query),
+          regexp: groupQueryToRegExp(query, !!options.ignoreCase),
           unknown: false,
           values: [],
           query,
@@ -64,27 +67,31 @@ export function organize<TValue>(
       ];
     }
 
-    return preset.flatMap(getGroups);
+    return Array.isArray(preset)
+      ? preset.flatMap(getGroups)
+      : getGroups(preset);
   };
 
   const groups = options.groups.flatMap(getGroups);
 
-  let unknownGroup = groups.find((group) => group.unknown);
-  if (!unknownGroup) {
-    unknownGroup = getUnknownGroup();
-    groups.push(unknownGroup);
+  let defaultGroup = groups.find((group) => group.unknown);
+  if (!defaultGroup) {
+    defaultGroup = getDefaultGroup();
+    groups.push(defaultGroup);
   }
 
-  values.forEach((value) => {
-    let mapped: string;
-
+  const getString = (value: TValue): string => {
     if ("map" in options) {
-      mapped = options.map(value);
+      return options.map(value);
     } else if (typeof value === "string") {
-      mapped = value;
+      return value;
     } else {
       throw Error("Neither a map function nor string values were passed!");
     }
+  };
+
+  values.forEach((value) => {
+    const mapped = getString(value);
 
     for (let group of groups) {
       if (group.regexp && mapped.match(group.regexp)) {
@@ -93,8 +100,18 @@ export function organize<TValue>(
       }
     }
 
-    unknownGroup!.values.push(value);
+    defaultGroup!.values.push(value);
   });
+
+  if (options.sort) {
+    groups.forEach((group) => {
+      group.values.sort((a, b) => getString(a).localeCompare(getString(b)));
+
+      if (options.sort === "DESC") {
+        group.values.reverse();
+      }
+    });
+  }
 
   return {
     flat: groups.flatMap((group) => group.values),
@@ -102,14 +119,20 @@ export function organize<TValue>(
   };
 }
 
-function groupQueryToRegExp(query: GroupQuery): RegExp {
-  return typeof query === "string" ? new RegExp(query) : query;
+function groupQueryToRegExp(query: GroupQuery, ignoreCase: boolean): RegExp {
+  let flags = "";
+
+  if (ignoreCase) {
+    flags += "i";
+  }
+
+  return new RegExp(query, flags);
 }
 
-function getUnknownGroup() {
+function getDefaultGroup() {
   return {
     unknown: true,
     values: [],
-    query: UNKNOWN_GROUP,
+    query: DEFAULT_GROUP,
   };
 }
