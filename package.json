@@ -1,6 +1,6 @@
 {
   "name": "prettier-plugin-organize-attributes",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1",
   "description": "Organize your HTML attributes autmatically with Prettier 🧼",
   "license": "MIT",
   "repository": {
@@ -14,9 +14,9 @@
   "keywords": [
     "prettier",
     "plugin",
-    "go",
-    "template",
-    "html"
+    "html",
+    "attributes",
+    "organize"
   ],
   "files": [
     "lib"
