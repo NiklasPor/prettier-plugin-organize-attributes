@@ -95,6 +95,7 @@ npm i prettier-plugin-organize-attributes -D
   (output)="output"
   [input]="input"
   *ngIf="ngIf"
+  other="other"
   class="style"
   [(ngModel)]="binding"
   id="id"
@@ -136,6 +137,7 @@ npm i prettier-plugin-organize-attributes -D
   [input]="input"
   (output)="output"
   *ngIf="ngIf"
+  other="other"
   class="style"
   [(ngModel)]="binding"
   id="id"
@@ -169,6 +171,7 @@ npm i prettier-plugin-organize-attributes -D
 ```html
 <!-- input -->
 <div
+  other="other"
   value="value"
   type="type"
   title="title"
@@ -201,5 +204,6 @@ npm i prettier-plugin-organize-attributes -D
   alt="alt"
   role="role"
   aria-test="test"
+  other="other"
 ></div>
 ```
