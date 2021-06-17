@@ -122,10 +122,12 @@ Read below for writing custom attribute orders and configurations ⤵️
   (output)="output()"
   [input]="input"
   *ngIf="ngIf"
-  other="other"
   class="style"
   [(ngModel)]="binding"
   id="id"
+  other="other"
+  [@inputAnimation]="value"
+  @simpleAnimation
 ></div>
 ```
 
@@ -135,6 +137,8 @@ Read below for writing custom attribute orders and configurations ⤵️
   class="style"
   id="id"
   *ngIf="ngIf"
+  @simpleAnimation
+  [@inputAnimation]="value"
   [(ngModel)]="binding"
   [input]="input"
   (output)="output()"
