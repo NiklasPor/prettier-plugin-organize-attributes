@@ -1,6 +1,6 @@
 import { miniorganize, OrganizedGroup, DEFAULT_GROUP } from "./organize";
 
-describe("miniorganize", () => {
+fdescribe("miniorganize", () => {
   it("should miniorganize", () => {
     const input = ["c", "a1", "b1", "a2", "b2"];
     const expected = ["a1", "a2", "b1", "b2", "c"];
@@ -65,6 +65,32 @@ describe("miniorganize", () => {
     const result = miniorganize(input, {
       groups: ["^a", "^b"],
       sort: false,
+    }).flat;
+
+    expect(result).toEqual(expected);
+  });
+
+  it("should ignore casing when ignoreCase is true", () => {
+    const input = ["attr1", "ATTR1", "attr2", "ATTR2"];
+    const expected = ["attr1", "ATTR1", "attr2", "ATTR2"];
+
+    const result = miniorganize(input, {
+      groups: ["^attr", "^ATTR"],
+      sort: false,
+      ignoreCase: true
+    }).flat;
+
+    expect(result).toEqual(expected);
+  });
+
+  it("should NOT ignore casing when ignoreCase is false", () => {
+    const input = ["attr1", "ATTR1", "attr2", "ATTR2"];
+    const expected = ["attr1", "attr2", "ATTR1", "ATTR2"];
+
+    const result = miniorganize(input, {
+      groups: ["^attr", "^ATTR"],
+      sort: false,
+      ignoreCase: false
     }).flat;
 
     expect(result).toEqual(expected);

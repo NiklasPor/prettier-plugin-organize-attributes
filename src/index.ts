@@ -91,8 +91,8 @@ function transformNode(
 ): void {
   if (node.attrs) {
     node.attrs = miniorganize(node.attrs, {
-      ignoreCase: ignoreCase,
       presets: PRESETS,
+      ignoreCase,
       groups,
       sort,
       map: ({ name }) => name,
