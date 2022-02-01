@@ -1,6 +1,6 @@
 import { miniorganize, OrganizedGroup, DEFAULT_GROUP } from "./organize";
 
-fdescribe("miniorganize", () => {
+describe("miniorganize", () => {
   it("should miniorganize", () => {
     const input = ["c", "a1", "b1", "a2", "b2"];
     const expected = ["a1", "a2", "b1", "b2", "c"];
