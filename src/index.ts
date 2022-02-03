@@ -24,7 +24,12 @@ export const options: {
     type: "string",
     category: "Global",
     description:
-      "attributeSort HTML attribute grousp internally. ASC, DESC or NONE.",
+      "attributeSort HTML attribute groups internally. ASC, DESC or NONE.",
+  },
+  attributeIgnoreCase: {
+    type: "boolean",
+    category: "Global",
+    description: "A flag to ignore casing in regexps or not.",
   },
 };
 
@@ -58,6 +63,7 @@ function transformRootNode(
   const sort: OrganizeOptionsSort =
     options.attributeSort === "NONE" ? false : options.attributeSort;
   const groups = [...options.attributeGroups];
+  const ignoreCase = options.attributeIgnoreCase;
 
   if (groups.length === 0) {
     switch (options.parser.toString().toLowerCase()) {
@@ -73,29 +79,33 @@ function transformRootNode(
     }
   }
 
-  transformNode(node, groups, sort);
+  transformNode(node, groups, sort, ignoreCase);
   return node;
 }
 
 function transformNode(
   node: HTMLNode,
   groups: string[],
-  sort: OrganizeOptionsSort
+  sort: OrganizeOptionsSort,
+  ignoreCase = true
 ): void {
   if (node.attrs) {
     node.attrs = miniorganize(node.attrs, {
-      ignoreCase: true,
       presets: PRESETS,
+      ignoreCase,
       groups,
       sort,
       map: ({ name }) => name,
     }).flat;
   }
 
-  node.children?.forEach((child) => transformNode(child, groups, sort));
+  node.children?.forEach((child) =>
+    transformNode(child, groups, sort, ignoreCase)
+  );
 }
 
 export type PrettierPluginOrganizeAttributesParserOptions = {
   attributeGroups: string[];
   attributeSort: "ASC" | "DESC" | "NONE";
+  attributeIgnoreCase: boolean;
 };

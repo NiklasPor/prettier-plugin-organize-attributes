@@ -69,4 +69,30 @@ describe("miniorganize", () => {
 
     expect(result).toEqual(expected);
   });
+
+  it("should ignore casing when ignoreCase is true", () => {
+    const input = ["attr1", "ATTR1", "attr2", "ATTR2"];
+    const expected = ["attr1", "ATTR1", "attr2", "ATTR2"];
+
+    const result = miniorganize(input, {
+      groups: ["^attr", "^ATTR"],
+      sort: false,
+      ignoreCase: true
+    }).flat;
+
+    expect(result).toEqual(expected);
+  });
+
+  it("should NOT ignore casing when ignoreCase is false", () => {
+    const input = ["attr1", "ATTR1", "attr2", "ATTR2"];
+    const expected = ["attr1", "attr2", "ATTR1", "ATTR2"];
+
+    const result = miniorganize(input, {
+      groups: ["^attr", "^ATTR"],
+      sort: false,
+      ignoreCase: false
+    }).flat;
+
+    expect(result).toEqual(expected);
+  });
 });
