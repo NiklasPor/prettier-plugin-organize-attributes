@@ -90,6 +90,28 @@ Read below for writing custom attribute orders and configurations ⤵️
 <div a="a" b="b" c="c" data-a="a" data-b="b" data-c="c"></div>
 ```
 
+---
+
+### Case-Sensitivity
+
+```json
+// .prettierrc
+{
+  "attributeGroups": ["^group-a$", "^group-b$", "^group-A$", "^group-B$"],
+  "attributeIgnoreCase": false
+}
+```
+
+```html
+<!-- input -->
+<div group-b group-B group-A group-a></div>
+```
+
+```html
+<!-- output -->
+<div group-a group-b group-A group-B></div>
+```
+
 ## Presets
 
 ### HTML
