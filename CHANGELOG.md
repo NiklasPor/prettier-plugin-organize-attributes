@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.0.5
+
+### Added
+
+- `attributeIgnoreCase` to toggle the case insensitive regex flag on all groups (default: `true`)
+
 ## 0.0.4
 
 ### Added
