@@ -30,6 +30,7 @@ export const options: {
     type: "boolean",
     category: "Global",
     description: "A flag to ignore casing in regexps or not.",
+    default: true,
   },
 };
 
