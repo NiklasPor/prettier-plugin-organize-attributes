@@ -1,7 +1,6 @@
-import * as posthtml from "posthtml";
-import { FastPath, Parser, ParserOptions } from "prettier";
+import { Parser, ParserOptions } from "prettier";
 import { parsers as htmlParsers } from "prettier/parser-html";
-import { miniorganize, OrganizeOptions, OrganizeOptionsSort } from "./organize";
+import { miniorganize, OrganizeOptionsSort } from "./organize";
 import { PRESETS, PRESET_KEYS } from "./presets";
 
 export const parsers = {

@@ -77,7 +77,7 @@ describe("miniorganize", () => {
     const result = miniorganize(input, {
       groups: ["^attr", "^ATTR"],
       sort: false,
-      ignoreCase: true
+      ignoreCase: true,
     }).flat;
 
     expect(result).toEqual(expected);
@@ -90,7 +90,7 @@ describe("miniorganize", () => {
     const result = miniorganize(input, {
       groups: ["^attr", "^ATTR"],
       sort: false,
-      ignoreCase: false
+      ignoreCase: false,
     }).flat;
 
     expect(result).toEqual(expected);
