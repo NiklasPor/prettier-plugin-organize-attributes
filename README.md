@@ -1,6 +1,6 @@
 ### prettier-plugin-organize-attributes [![npm](https://img.shields.io/npm/v/prettier-plugin-organize-attributes)](https://www.npmjs.com/package/prettier-plugin-organize-attributes)
 
-## Organize your HTML attributes autmatically with Prettier 🧼
+## Organize your HTML attributes automatically with Prettier 🧼
 
 ```
 npm i prettier prettier-plugin-organize-attributes -D
