@@ -1,13 +1,14 @@
-import * as posthtml from "posthtml";
-import { FastPath, Parser, ParserOptions } from "prettier";
+import { Parser, ParserOptions } from "prettier";
 import { parsers as htmlParsers } from "prettier/parser-html";
-import { miniorganize, OrganizeOptions, OrganizeOptionsSort } from "./organize";
+import { OrganizeOptionsSort, miniorganize } from "./organize";
 import { PRESETS, PRESET_KEYS } from "./presets";
 
+const prettierParsers = htmlParsers as any;
+
 export const parsers = {
-  html: wrapParser(htmlParsers.html),
-  vue: wrapParser(htmlParsers.vue),
-  angular: wrapParser(htmlParsers.angular),
+  html: wrapParser(prettierParsers.html),
+  vue: wrapParser(prettierParsers.vue),
+  angular: wrapParser(prettierParsers.angular),
 };
 
 export const options: {
@@ -50,9 +51,9 @@ function wrapParser(parser: Parser<any>): Parser<any> {
 }
 
 function transformPostParse(parse: Parser<any>["parse"]): Parser<any>["parse"] {
-  return (text, parsers, options) =>
+  return (text, options) =>
     transformRootNode(
-      parse(text, parsers, options),
+      parse(text, options),
       options as ParserOptions & PrettierPluginOrganizeAttributesParserOptions
     );
 }

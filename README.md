@@ -29,11 +29,19 @@ npm i prettier prettier-plugin-organize-attributes -D
 
 ## Usage
 
-The following files also work out of the box **without** any configuration needed:
+The following files also work out of the box if the plugin is specified:
 
 - `.html` – [HTML Example](#html)
 - `.component.html` – [Angular Example](#angular)
 - `.vue` – [Vue Example](#vue)
+
+```json
+// .prettierrc
+{
+  "plugins": ["prettier-plugin-organize-attributes"],
+}
+```
+> Starting with Prettier 3 [this is **required**](https://github.com/prettier/prettier/issues/13729#issuecomment-1643923144) ⬆️
 
 Read below for writing custom attribute orders and configurations ⤵️
 
@@ -42,6 +50,7 @@ Read below for writing custom attribute orders and configurations ⤵️
 ```json
 // .prettierrc
 {
+  "plugins": ["prettier-plugin-organize-attributes"],
   "attributeGroups": ["^class$", "^(id|name)$", "$DEFAULT", "^aria-"]
 }
 ```
@@ -75,6 +84,7 @@ Read below for writing custom attribute orders and configurations ⤵️
 ```json
 // .prettierrc
 {
+  "plugins": ["prettier-plugin-organize-attributes"],
   "attributeGroups": ["$DEFAULT", "^data-"],
   "attributeSort": "ASC"
 }
@@ -97,6 +107,7 @@ Read below for writing custom attribute orders and configurations ⤵️
 ```json
 // .prettierrc
 {
+  "plugins": ["prettier-plugin-organize-attributes"],
   "attributeGroups": ["^group-a$", "^group-b$", "^group-A$", "^group-B$"],
   "attributeIgnoreCase": false
 }
@@ -118,7 +129,9 @@ Read below for writing custom attribute orders and configurations ⤵️
 
 ```json
 // .prettierrc
-{}
+{
+  "plugins": ["prettier-plugin-organize-attributes"]
+}
 ```
 
 ```html
@@ -175,6 +188,7 @@ Read below for writing custom attribute orders and configurations ⤵️
 ```json
 // .prettierrc
 {
+  "plugins": ["prettier-plugin-organize-attributes"],
   "attributeGroups": [
     "$ANGULAR_OUTPUT",
     "$ANGULAR_TWO_WAY_BINDING",
@@ -216,7 +230,9 @@ Read below for writing custom attribute orders and configurations ⤵️
 
 ```json
 // .prettierrc
-{}
+{
+  "plugins": ["prettier-plugin-organize-attributes"],
+}
 ```
 
 ```vue
@@ -240,6 +256,7 @@ Read below for writing custom attribute orders and configurations ⤵️
 ```json
 // .prettierrc
 {
+  "plugins": ["prettier-plugin-organize-attributes"],
   "attributeGroups": ["$CODE_GUIDE"]
 }
 ```
