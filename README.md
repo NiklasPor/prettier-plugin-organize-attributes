@@ -35,13 +35,14 @@ The following files also work out of the box if the plugin is specified:
 - `.component.html` – [Angular Example](#angular)
 - `.vue` – [Vue Example](#vue)
 
+> Starting with Prettier 3 auto-discovery has been removed. Configuration is required ⬇️
+
 ```json
 // .prettierrc
 {
-  "plugins": ["prettier-plugin-organize-attributes"],
+  "plugins": ["prettier-plugin-organize-attributes"]
 }
 ```
-> Starting with Prettier 3 [this is **required**](https://github.com/prettier/prettier/issues/13729#issuecomment-1643923144) ⬆️
 
 Read below for writing custom attribute orders and configurations ⤵️
 
@@ -231,7 +232,7 @@ Read below for writing custom attribute orders and configurations ⤵️
 ```json
 // .prettierrc
 {
-  "plugins": ["prettier-plugin-organize-attributes"],
+  "plugins": ["prettier-plugin-organize-attributes"]
 }
 ```
 
